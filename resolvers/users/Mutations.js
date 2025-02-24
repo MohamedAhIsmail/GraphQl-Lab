@@ -14,12 +14,7 @@ const userMutations = {
         throw new Error("User with this email already exists");
       }
   
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-  
-      const newUser = await userModel.create({
-        ...user,
-        password: hashedPassword,
-      });
+      const newUser = await userModel.create(user);
   
       console.log("New user created:", newUser);
   
@@ -30,7 +25,6 @@ const userMutations = {
     }
   },
   
-
   async login(_, { user }) {
     try {
       const { email, password } = user;
@@ -56,9 +50,11 @@ const userMutations = {
 
       return token;
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
+      throw new Error(error.message);
     }
-  },
+}
+,
 };
 
 export default userMutations;
